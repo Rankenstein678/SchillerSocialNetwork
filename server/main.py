@@ -40,7 +40,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
 
-        if  password == client_post.password:
+        if password == client_post.password:
             self.send_response(400)
             self.send_header("Content-type", "text/text")
             self.end_headers()

@@ -12,7 +12,7 @@ while True:
             try:
                 response = requests.get("http://192.168.6.93:8080")
             except requests.ConnectionError as err:
-                print('Server Error:\n' + err)
+                print('Server Error:\n' + str(err))
                 continue
             if response.status_code == 200:
                 post = jsonpickle.decode(response.text)
@@ -23,13 +23,14 @@ while True:
             text = input('Post Inhalt:\n')
             response = None
             try:
-                response = requests.post('http://192.168.6.129:8080', data=jsonpickle.encode(ClientPost(USERID, text)))
+                response = requests.post('http://192.168.6.93:8080', data=jsonpickle.encode(ClientPost(USERID, text)))
             except requests.ConnectionError as err:
-                print('Server Error:\n' + err)
+                print('Server Error:\n' + str(err))
                 continue
 
             if response.status_code == 200:
-                post = jsonpickle.decode(response.text)
-                print(f'{post.userID}\n{post.text}\nLikes: {post.likes}')
+                print(response.text)
+            elif response.status_code==400:
+                print(response.text)
             else:
                 print('ErrorStatusCode = ', response.status_code)

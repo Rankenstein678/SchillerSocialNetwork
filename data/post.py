@@ -7,3 +7,9 @@ class Post():
 
     def __str__(self):
         return "Post:{" + str(self.postID) + ", " + str(self.userID) + ", " + self.text + ", " + str(self.likes) + "}"
+
+
+class ClientPost():
+    def __init__(self, userID, text):
+        self.userID = userID
+        self.text = text

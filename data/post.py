@@ -10,6 +10,7 @@ class Post():
 
 
 class ClientPost():
-    def __init__(self, userID, text):
-        self.userID = userID
+    def __init__(self, userName, password, text):
+        self.userName = userName
+        self.password = password  # incredible Security - protected by SchillerSpirit
         self.text = text

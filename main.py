@@ -1,16 +1,33 @@
-# This is a sample Python script.
+# Python 3 server example
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import jsonpickle
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from data.post import Post
+import json
+
+hostName = "localhost"
+serverPort = 8080
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+class MyServer(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/json")
+        self.end_headers()
+        p = Post(0, 0, "Test", 0)
+        self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if __name__ == "__main__":
+    p = Post(0, 0, "Test", 0)
+    print(jsonpickle.encode(p))
+    webServer = HTTPServer((hostName, serverPort), MyServer)
+    print("Server started http://%s:%s" % (hostName, serverPort))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    try:
+        webServer.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
+    webServer.server_close()
+    print("Server stopped.")

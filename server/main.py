@@ -18,8 +18,6 @@ class MyServer(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    p = Post(0, 0, "Test", 0)
-    print(jsonpickle.encode(p))
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 

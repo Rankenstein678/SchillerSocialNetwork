@@ -3,9 +3,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import jsonpickle
 
 from data.post import Post
-import json
 
-hostName = "localhost"
+hostName = "192.168.6.93"
 serverPort = 8080
 
 

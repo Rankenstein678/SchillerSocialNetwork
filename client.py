@@ -1,3 +1,4 @@
 import requests, jsonpickle
-json = requests.get("localhost:8080")
-print(jsonpickle.decode(json))
+response = requests.get("http://192.168.6.93:8080")
+print(response)
+print(jsonpickle.decode(response.text).text)

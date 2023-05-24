@@ -4,3 +4,6 @@ class Post():
         self.userID = userID
         self.text = text
         self.likes = likes
+
+    def __str__(self):
+        return "Post:{" + str(self.postID) + ", " + str(self.userID) + ", " + self.text + ", " + str(self.likes) + "}"

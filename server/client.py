@@ -27,8 +27,10 @@ while True:
         case 'p':
             text = input('Post Inhalt:\n')
             response = None
+            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], text))
+            print(data)
             try:
-                response = requests.post(ip, data=jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], text)))
+                response = requests.post(ip, data=data)
             except requests.ConnectionError as err:
                 print('Server Error:\n' + str(err))
                 continue

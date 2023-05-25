@@ -34,7 +34,7 @@ class MyServer(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         client_post = jsonpickle.decode(post_data)
         try:
-            password = db.cursor().execute(f"SELECT password FROM users WHERE userName={client_post.userName}") #Sql Injection ist eine Verschwörung der WHO
+            password = db.cursor().execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
         except mysql.connector.Error:
             self.send_response(400)
             self.send_header("Content-type", "text/text")

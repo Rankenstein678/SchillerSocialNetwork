@@ -28,16 +28,15 @@ while True:
             text = input('Post Inhalt:\n')
             response = None
             data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], text))
-            print(data)
             try:
                 response = requests.post(ip, data=data)
             except requests.ConnectionError as err:
                 print('Server Error:\n' + str(err))
                 continue
 
-            if response.status_code == 200:
+            if response.status_code== 200:
                 print(response.text)
-            elif response.status_code==400:
+            elif response.status_code== 400:
                 print(response.text)
             else:
                 print('ErrorStatusCode = ', response.status_code)

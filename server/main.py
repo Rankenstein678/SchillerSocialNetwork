@@ -33,39 +33,52 @@ class MyServer(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])  # <--- Gets the size of data
         post_data = self.rfile.read(content_length)
         client_post = jsonpickle.decode(post_data)
-        try:
-            cursor.execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
-            password= cursor.fetchall()[0][0]
-        except:
-            self.send_response(400)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
+        if client_post.inputcase == 0:  # Post is being sent
+            try:
+                cursor.execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
+                password= cursor.fetchall()[0][0]
+            except:
+                self.send_response(400)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
 
-        if password != client_post.password:
-            self.send_response(400)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
-        elif client_post.text != '':
-            self.send_response(200)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Post gesendet!', 'utf-8'))
-            text=client_post.text
-            username=client_post.userName
-            print(username, ":\n", text)
-            cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
-            userID = cursor.fetchall()[0][0]
-            print(userID)
-            cursor.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
-            db.commit()
-        else:
-            self.send_response(400)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Fehlerhafte Post Syntax!', 'utf-8'))
+            if password != client_post.password:
+                self.send_response(400)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
+            elif client_post.text != '':
+                self.send_response(200)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('Post gesendet!', 'utf-8'))
+                text=client_post.text
+                username=client_post.userName
+                print(username, ":\n", text)
+                cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
+                userID = cursor.fetchall()[0][0]
+                print(userID)
+                cursor.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
+                db.commit()
+            else:
+                self.send_response(400)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('Fehlerhafte Post Syntax!', 'utf-8'))
 
+        elif client_post.inputcase == 1:
+            newUser= client_post.userName
+            newPassword= client_post.password
+            cursor.execute(f'SELECT userName FROM users WHERE userName = %s', (newUser,))
+            data = cursor.fetchall()
+            if len(data) >= 1:
+                self.send_response(500)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('User existiert bereits! Anderen Namen wählen!', 'utf-8'))
+            else:
+                cursor.execute(f'INSERT INTO users (userName, password) VALUES (%s, %s)', (newUser, newPassword))
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)

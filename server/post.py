@@ -1,5 +1,6 @@
 class Post():
-    def __init__(self, postID, userID, text, likes):
+    def __init__(self, postID, userID, text, likes, inputcase):
+        self.inputcase = inputcase
         self.postID = postID
         self.userID = userID
         self.text = text

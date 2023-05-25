@@ -11,7 +11,7 @@ serverPort = 8080
 
 
 def connect_to_db():
-    conn = MySQLConnection(host='localhost', user='one', password='schillercoin', database='mastesuperiority')
+    conn = MySQLConnection(host='localhost', user='one', password='schillercoin', database='matesuperiority')
     cursor = conn.cursor()
 
     return cursor, conn

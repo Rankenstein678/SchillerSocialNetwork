@@ -5,14 +5,14 @@ import mysql.connector
 
 from data.post import Post
 
-hostName = "192.168.6.138"
-mysqlhostname='192.168.6.177'
+hostName = "192.168.6.93"
+mysqlhost= '192.168.6.179'
 serverPort = 8080
 
 
 def connect_to_db():
     return (mysql.connector.connect(
-        host=mysqlhostname,
+        host=mysqlhost,
         user='socialhack',
         password='schillercoin',
         database='matesuperiority')  # eww

@@ -30,19 +30,9 @@ class MyServer(BaseHTTPRequestHandler):
 
     def do_POST(self):
         cursor, db = connect_to_db()
-
-        # Verarbeitet die Request Daten
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            client_post = jsonpickle.decode(post_data)
-        except:
-            self.send_response(400)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Malformed request','utf-8'))
-            return
-
+        content_length = int(self.headers['Content-Length'])  # <--- Gets the size of data
+        post_data = self.rfile.read(content_length)
+        client_post = jsonpickle.decode(post_data)
         try:
             cursor.execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
             password= cursor.fetchall()[0][0]
@@ -51,29 +41,25 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/text")
             self.end_headers()
             self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
-            return
 
         if password != client_post.password:
             self.send_response(400)
             self.send_header("Content-type", "text/text")
             self.end_headers()
             self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
-
         elif client_post.text != '':
             self.send_response(200)
             self.send_header("Content-type", "text/text")
             self.end_headers()
             self.wfile.write(bytes('Post gesendet!', 'utf-8'))
-
-            text = client_post.text
-            username = client_post.userName
+            text=client_post.text
+            username=client_post.userName
             print(username, ":\n", text)
             cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
             userID = cursor.fetchall()[0][0]
             print(userID)
             cursor.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
             db.commit()
-
         else:
             self.send_response(400)
             self.send_header("Content-type", "text/text")

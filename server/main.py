@@ -25,7 +25,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users u, posts p WHERE p.userID = u.userID ORDER BY p.postID DESC LIMIT 1')
         data = cursor.fetchall()[0]
-        p= Post(data[0], data[1], data[2], data[3])
+        p= Post(data[0], data[1], data[2], data[3], 0)
         self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
 
     def do_POST(self):

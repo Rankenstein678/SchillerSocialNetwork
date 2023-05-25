@@ -1,9 +1,7 @@
-import getpass
-
 import jsonpickle
 import requests
 
-from data.post import ClientPost
+from server.post import ClientPost
 
 username = input('Gebe deinen Benuternamen an:\n')
 password = input("Passwort: ")

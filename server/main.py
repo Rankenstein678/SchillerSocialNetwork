@@ -3,19 +3,19 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import jsonpickle
 import mysql.connector
 
-from data.post import Post
+from post import Post
 
-hostName = "192.168.6.93"
-mysqlhost= '192.168.6.179'
+hostName = "192.168.6.179"
+mysqlhostname='192.168.6.179'
 serverPort = 8080
 
 
 def connect_to_db():
     return (mysql.connector.connect(
-        host=mysqlhost,
-        user='socialhack',
+        host='localhost',
+        user='one',
         password='schillercoin',
-        database='matesuperiority')  # eww
+        database='matesuperiority')
     )
 
 

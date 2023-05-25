@@ -20,20 +20,6 @@ def connect_to_db():
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         cursor, conn = connect_to_db()
-
-        # Verarbeitet die Request Daten
-        content_length = int(self.headers['Content-Length'])
-        request_data = self.rfile.read(content_length)
-        try:
-            index = request_data.split()[0]
-            amount = request_data.split()[1]
-        except:
-            self.send_response(400)
-            self.send_header("Content-type", "text/text")
-            self.end_headers()
-            self.wfile.write(bytes('Malformed request','utf-8'))
-            return
-
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()

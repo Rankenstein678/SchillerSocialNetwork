@@ -10,8 +10,6 @@ mysqlhostname='192.168.6.179'
 serverPort = 8080
 
 
-
-
 def connect_to_db():
     return (mysql.connector.connect(
         host='localhost',
@@ -56,7 +54,7 @@ class MyServer(BaseHTTPRequestHandler):
             text=client_post.text
             username=client_post.userName
             print(username, ":\n", text)
-            curser=db.cursor()
+            curser = db.curser()
             userID=curser.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
             print(userID)
             curser.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))

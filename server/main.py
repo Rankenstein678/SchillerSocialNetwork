@@ -73,7 +73,7 @@ class MyServer(BaseHTTPRequestHandler):
             cursor.execute(f'SELECT userName FROM users WHERE userName = %s', (newUser,))
             data = cursor.fetchall()
             if len(data) >= 1:
-                self.send_response(500)#
+                self.send_response(500)
                 self.send_header("Content-type", "text/text")
                 self.end_headers()
                 self.wfile.write(bytes('User existiert bereits! Anderen Namen wählen!', 'utf-8'))

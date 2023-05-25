@@ -13,5 +13,5 @@ class Post():
 class ClientPost():
     def __init__(self, userName, password, text):
         self.userName = userName
-        self.password = password  # incredible Security - protected by SchillerSpirit
+        self.password = password
         self.text = text

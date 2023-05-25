@@ -11,11 +11,11 @@ def createUser():
     password = input("Passwort: ")
     LOGIN_CREDENTIALS = (username, password)
     data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
-
-    try:
-        response = requests.post(ip, data=data)
-    except requests.ConnectionError as err:
-        print('Server Error:\n' + str(err))
+    #response = None
+    #try:
+    response = requests.post(ip, data=data)
+    #except requests.ConnectionError as err:
+    print('Server Error:\n' + str(err))
 
     if response.status_code == 200:
         print(response.text)

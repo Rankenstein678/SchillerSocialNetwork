@@ -79,6 +79,11 @@ class MyServer(BaseHTTPRequestHandler):
                 self.wfile.write(bytes('User existiert bereits! Anderen Namen wählen!', 'utf-8'))
             else:
                 cursor.execute(f'INSERT INTO users (userName, password) VALUES (%s, %s)', (newUser, newPassword))
+                db.commit()
+                self.send_response(200)
+                self.send_header("Content-type", "text/text")
+                self.end_headers()
+                self.wfile.write(bytes('User erstellt.', 'utf-8'))
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)

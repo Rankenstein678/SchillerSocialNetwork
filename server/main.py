@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import jsonpickle
-import mysql.connector
+from mysql.connector import MySQLConnection
 
 from post import Post
 
@@ -11,16 +11,16 @@ serverPort = 8080
 
 
 def connect_to_db():
-    return (mysql.connector.connect(
-        host='localhost',
-        user='one',
-        password='schillercoin',
-        database='matesuperiority')
-    )
+    conn = MySQLConnection(host='localhost', user='one', password='schillercoin', database='matesuperiority')
+    cursor = conn.cursor()
+
+    return cursor, conn
 
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
+        cursor, conn = connect_to_db()
+
         # Verarbeitet die Request Daten
         content_length = int(self.headers['Content-Length'])
         request_data = self.rfile.read(content_length)
@@ -34,7 +34,6 @@ class MyServer(BaseHTTPRequestHandler):
             self.wfile.write(bytes('Malformed request','utf-8'))
             return
 
-        db = connect_to_db()
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()
@@ -42,7 +41,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
 
     def do_POST(self):
-        db = connect_to_db()
+        cursor, db = connect_to_db()
 
         # Verarbeitet die Request Daten
         try:
@@ -57,15 +56,16 @@ class MyServer(BaseHTTPRequestHandler):
             return
 
         try:
-            password = db.cursor().execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
-        except mysql.connector.Error:
+            cursor.execute(f"SELECT password FROM users WHERE userName=%s", (client_post.userName,))
+            password= cursor.fetchall()[0][0]
+        except:
             self.send_response(400)
             self.send_header("Content-type", "text/text")
             self.end_headers()
             self.wfile.write(bytes('Falscher User oder Passwort!', 'utf-8'))
             return
 
-        if password == client_post.password:
+        if password != client_post.password:
             self.send_response(400)
             self.send_header("Content-type", "text/text")
             self.end_headers()
@@ -80,9 +80,10 @@ class MyServer(BaseHTTPRequestHandler):
             text = client_post.text
             username = client_post.userName
             print(username, ":\n", text)
-            userID = db.cursor().execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
+            cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
+            userID = cursor.fetchall()[0][0]
             print(userID)
-            db.curser().execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
+            cursor.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
             db.commit()
 
         else:

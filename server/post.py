@@ -11,7 +11,8 @@ class Post():
 
 
 class ClientPost():
-    def __init__(self, userName, password, text):
+    def __init__(self, userName, password, text, inputcase):
+        self.inputcase = inputcase
         self.userName = userName
         self.password = password
         self.text = text

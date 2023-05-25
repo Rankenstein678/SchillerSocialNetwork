@@ -25,7 +25,7 @@ def createUser():
         LOGIN_CREDENTIALS= createUser()
         return(LOGIN_CREDENTIALS)
 
-action = int(input('Gebe Aktion ein     \'0\' für Posts     \'1\' um User zu erstellen'))
+action = int(input('Gebe Aktion ein     \'0\' für Posts     \'1\' um User zu erstellen: \n'))
 if action== 0:
     username = input('Gebe deinen Benuternamen an:\n')
     password = input("Passwort: ")

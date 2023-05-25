@@ -23,7 +23,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()
-        cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users s, posts p WHERE p.userID == u.userID SORT BY postID DESC LIMIT 1')
+        cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users s, posts p WHERE p.userID = u.userID SORT BY postID DESC LIMIT 1')
         data = cursor.fetchall()[0]
         p= Post(data[0], data[1], data[2], data[3])
         self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))

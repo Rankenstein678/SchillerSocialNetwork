@@ -54,10 +54,9 @@ class MyServer(BaseHTTPRequestHandler):
             text=client_post.text
             username=client_post.userName
             print(username, ":\n", text)
-            curser = db.curser()
-            userID=curser.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
+            userID=db.cursor().execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
             print(userID)
-            curser.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
+            db.curser().execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
             db.commit()
         else:
             self.send_response(400)

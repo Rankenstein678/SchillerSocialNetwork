@@ -30,6 +30,7 @@ class MyServer(BaseHTTPRequestHandler):
         for i in data:
             p= Post(i[0], i[1], i[2], i[3], 0)
             L.append(p)
+        print(L)
         self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
 
     def do_POST(self):

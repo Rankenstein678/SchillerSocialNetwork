@@ -19,7 +19,7 @@ def connect_to_db():
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        params= str(self.path)[1:]
+        params= int(str(self.path)[1:].strip())
         print(params)
         cursor, conn = connect_to_db()
         self.send_response(200)

@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import jsonpickle
 from mysql.connector import MySQLConnection
-
+import random as rn
 from post import Post
 
 hostName = "192.168.6.179"
@@ -70,7 +70,8 @@ class MyServer(BaseHTTPRequestHandler):
                 cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
                 userID = cursor.fetchall()[0][0]
                 print(userID)
-                cursor.execute(f"INSERT INTO posts (userID, title, text, likes) VALUES (%s, %s, %s, 0)", (userID, title, text))
+                likes= rn.randint(0,100) * 1000
+                cursor.execute(f"INSERT INTO posts (userID, title, text, likes) VALUES (%s, %s, %s, %s)", (userID, title, text, likes))
                 db.commit()
             else:
                 self.send_response(400)

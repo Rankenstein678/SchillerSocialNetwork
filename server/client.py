@@ -1,7 +1,7 @@
 import jsonpickle
 import requests
 import time
-
+import random as rn
 from post import ClientPost
 
 ip = 'http://192.168.6.179:8080'
@@ -96,15 +96,15 @@ while True:
                 print('Server Error:\n' + str(err))
                 continue
             if response.status_code == 200:
-                post = jsonpickle.decode(response.text)
-                print(f'{post.userID}\n{post.text}\nLikes: {post.likes}')
+                post = jsonpickle.decode(response.text)[0]
+                print(f'User: {post.userID}\nTitle: {post.title}\nText: {post.text}\nLikes: {post.likes}')
             else:
                 print('ErrorStatusCode = ', response.status_code)
         case 'p':
             title= input('Titel: \n')
             text = input('Inhalt:\n')
             response = None
-            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))
+            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))[0]
             try:
                 response = requests.post(ip, data=data)
             except requests.ConnectionError as err:

@@ -1,5 +1,6 @@
 class Post():
-    def __init__(self, postID, userID, text, likes, inputcase):
+    def __init__(self, postID, userID, title, text, likes, inputcase):
+        self.title = title
         self.inputcase = inputcase
         self.postID = postID
         self.userID = userID
@@ -11,7 +12,8 @@ class Post():
 
 
 class ClientPost():
-    def __init__(self, userName, password, text, inputcase):
+    def __init__(self, userName, password, title, text, inputcase):
+        self.title = title
         self.inputcase = inputcase
         self.userName = userName
         self.password = password

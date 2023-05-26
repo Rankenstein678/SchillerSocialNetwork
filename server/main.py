@@ -29,7 +29,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()
-        cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users u, posts p WHERE p.userID = u.userID ORDER BY p.postID DESC LIMIT %s', (params,))
+        cursor.execute(f'SELECT p.postID, u.userName, p.title, p.text, p.likes FROM users u, posts p WHERE p.userID = u.userID ORDER BY p.postID DESC LIMIT %s', (params,))
         data = cursor.fetchall()
         L=[]
         for i in data:
@@ -70,7 +70,7 @@ class MyServer(BaseHTTPRequestHandler):
                 cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
                 userID = cursor.fetchall()[0][0]
                 print(userID)
-                cursor.execute(f"INSERT INTO posts (userID, title. text, likes) VALUES (%s, %s, %s, 0)", (userID, title, text))
+                cursor.execute(f"INSERT INTO posts (userID, title, text, likes) VALUES (%s, %s, %s, 0)", (userID, title, text))
                 db.commit()
             else:
                 self.send_response(400)

@@ -33,7 +33,7 @@ class MyServer(BaseHTTPRequestHandler):
         data = cursor.fetchall()
         L=[]
         for i in data:
-            p= Post(i[0], i[1], i[2], i[3], 0)
+            p= Post(i[0], i[1], i[2], i[3], i[4], 0)
             L.append(p)
         print(L)
         self.wfile.write(bytes(jsonpickle.encode(L), "utf-8"))

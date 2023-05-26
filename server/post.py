@@ -8,7 +8,7 @@ class Post():
         self.likes = likes
 
     def __str__(self):
-        return "Post:{" + str(self.postID) + ", " + str(self.userID) + ", " + self.text + ", " + str(self.likes) + "}"
+        return "Post:{" + str(self.postID) + ", " + str(self.userID) + ", " + self.title + ", " + self.text + ", " + str(self.likes) + "}"
 
 
 class ClientPost():

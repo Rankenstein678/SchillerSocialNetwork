@@ -19,7 +19,11 @@ def connect_to_db():
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        params= int(str(self.path)[1:].strip())
+        params= str(self.path)[1:].strip()
+        if params!="":
+            params=int(params)
+        else:
+            params=1
         print(params)
         cursor, conn = connect_to_db()
         self.send_response(200)
@@ -32,7 +36,7 @@ class MyServer(BaseHTTPRequestHandler):
             p= Post(i[0], i[1], i[2], i[3], 0)
             L.append(p)
         print(L)
-        self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
+        self.wfile.write(bytes(jsonpickle.encode(L), "utf-8"))
 
     def do_POST(self):
         cursor, db = connect_to_db()

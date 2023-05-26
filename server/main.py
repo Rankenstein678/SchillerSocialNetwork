@@ -70,7 +70,7 @@ class MyServer(BaseHTTPRequestHandler):
                 cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
                 userID = cursor.fetchall()[0][0]
                 print(userID)
-                likes= rn.randint(0,100) * 1000
+                likes= 10
                 cursor.execute(f"INSERT INTO posts (userID, title, text, likes) VALUES (%s, %s, %s, %s)", (userID, title, text, likes))
                 db.commit()
             else:

@@ -19,15 +19,17 @@ def connect_to_db():
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        params= str(self.path)
-        print(params)
+        params= int(str(self.path)[1:])
         cursor, conn = connect_to_db()
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()
-        cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users u, posts p WHERE p.userID = u.userID ORDER BY p.postID DESC LIMIT 1')
-        data = cursor.fetchall()[0]
-        p= Post(data[0], data[1], data[2], data[3], 0)
+        cursor.execute(f'SELECT p.postID, u.userName, p.text, p.likes FROM users u, posts p WHERE p.userID = u.userID ORDER BY p.postID DESC LIMIT %s', (params,))
+        data = cursor.fetchall()
+        L=[]
+        for i in data:
+            p= Post(i[0], i[1], i[2], i[3], 0)
+            L.append(p)
         self.wfile.write(bytes(jsonpickle.encode(p), "utf-8"))
 
     def do_POST(self):

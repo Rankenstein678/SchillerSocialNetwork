@@ -4,7 +4,7 @@ import time
 import random as rn
 from post import ClientPost
 
-ip = 'http://192.168.6.179:8080'
+ip = "http://192.168.6.179:8080"
 
 
 print("""
@@ -59,14 +59,14 @@ print("\n")
 
 
 def createUser():
-    username = input('Gebe einen Benuternamen an:\n')
+    username = input("Gebe einen Benuternamen an:\n")
     password = input("Passwort: ")
     LOGIN_CREDENTIALS = (username, password)
     data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
     try:
         response = requests.post(ip, data=data)
     except requests.ConnectionError as err:
-        print('Server Error:\n' + str(err))
+        print("Server Error:\n" + str(err))
 
     if response.status_code == 200:
         print(response.text)
@@ -76,9 +76,9 @@ def createUser():
         LOGIN_CREDENTIALS= createUser()
         return(LOGIN_CREDENTIALS)
 
-action = int(input('Gebe Aktion ein     \'0\' für Posts     \'1\' um User zu erstellen: \n'))
+action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen: \n"))
 if action== 0:
-    username = input('Gebe deinen Benuternamen an:\n')
+    username = input("Gebe deinen Benuternamen an:\n")
     password = input("Passwort: ")
     LOGIN_CREDENTIALS = (username, password)
 
@@ -88,27 +88,27 @@ elif action== 1:
 while True:
     user_in = input("r - Gibt neuesten Post aus; p - sendet einen Post\n")
     match user_in:
-        case 'r':  # Password bei Requests nicht benötigt, da der Server eh lokal ist
+        case "r":  # Password bei Requests nicht benötigt, da der Server eh lokal ist
             response = None
             try:
                 response = requests.get(ip)
             except requests.ConnectionError as err:
-                print('Server Error:\n' + str(err))
+                print("Server Error:\n" + str(err))
                 continue
             if response.status_code == 200:
                 post = jsonpickle.decode(response.text)[0]
-                print(f'User: {post.userID}\nTitle: {post.title}\nText: {post.text}\nLikes: {post.likes}')
+                print(f"User: {post.userID}\nTitle: {post.title}\nText: {post.text}\nLikes: {post.likes}")
             else:
-                print('ErrorStatusCode = ', response.status_code)
-        case 'p':
-            title= input('Titel: \n')
-            text = input('Inhalt:\n')
+                print("ErrorStatusCode = ", response.status_code)
+        case "p":
+            title= input("Titel: \n")
+            text = input("Inhalt:\n")
             response = None
             data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))[0]
             try:
                 response = requests.post(ip, data=data)
             except requests.ConnectionError as err:
-                print('Server Error:\n' + str(err))
+                print("Server Error:\n" + str(err))
                 continue
 
             if response.status_code== 200:
@@ -116,4 +116,4 @@ while True:
             elif response.status_code== 400:
                 print(response.text)
             else:
-                print('ErrorStatusCode = ', response.status_code)
+                print("ErrorStatusCode = ", response.status_code)

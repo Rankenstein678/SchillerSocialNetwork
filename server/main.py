@@ -63,13 +63,14 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/text")
                 self.end_headers()
                 self.wfile.write(bytes('Post gesendet!', 'utf-8'))
+                title= client_post.title
                 text=client_post.text
                 username=client_post.userName
                 print(username, ":\n", text)
                 cursor.execute(f"SELECT userID FROM users WHERE userName=%s", (client_post.userName,))
                 userID = cursor.fetchall()[0][0]
                 print(userID)
-                cursor.execute(f"INSERT INTO posts (userID, text, likes) VALUES (%s, %s, 0)", (userID, text))
+                cursor.execute(f"INSERT INTO posts (userID, title. text, likes) VALUES (%s, %s, %s, 0)", (userID, title, text))
                 db.commit()
             else:
                 self.send_response(400)

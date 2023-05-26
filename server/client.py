@@ -101,9 +101,10 @@ while True:
             else:
                 print('ErrorStatusCode = ', response.status_code)
         case 'p':
-            text = input('Post Inhalt:\n')
+            title= input('Titel: \n')
+            text = input('Inhalt:\n')
             response = None
-            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], text, 0))
+            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))
             try:
                 response = requests.post(ip, data=data)
             except requests.ConnectionError as err:

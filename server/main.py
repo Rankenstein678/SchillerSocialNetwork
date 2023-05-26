@@ -19,7 +19,8 @@ def connect_to_db():
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        params= int(str(self.path)[1:])
+        params= str(self.path)[1:]
+        print(params)
         cursor, conn = connect_to_db()
         self.send_response(200)
         self.send_header("Content-type", "text/json")

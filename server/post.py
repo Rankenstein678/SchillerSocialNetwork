@@ -1,3 +1,4 @@
+# each post is represented by an object
 class Post():
     def __init__(self, postID, userID, title, text, likes, inputcase):
         self.title = title

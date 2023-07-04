@@ -1,8 +1,12 @@
 import jsonpickle
+import json
 import requests
 import time
 import random as rn
 from post import ClientPost
+import hashlib
+import os
+from main import MyServer
 
 ip = "http://192.168.6.179:8080"
 
@@ -61,14 +65,20 @@ print("\n")
 def createUser():
     # --------------------------------------------------
     # take user input for verification and turn it into a JSON String with @jsonpickle
-    username = input("Gebe einen Benuternamen an:\n")
-    password = input("Passwort: ")
-    LOGIN_CREDENTIALS = (username, password)
+    username =input("Gebe einen Benuternamen an:\n")
+    password =input("Passwort: ")
+
+    # hash the password with random 32 bit long salt and 200.000 iterations of sha256
+    clum =os.urandom(32)
+    key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
+
+    # combine salt and key and use them as login credentials together with username
+    LOGIN_CREDENTIALS =(username, clum+key)
     data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
-    #--------------------------------------------------
+    # --------------------------------------------------
     # try to make post request to web page using previously made JSON String data with @requests
     try:
-        response = requests.post(ip, data=data)
+        response =requests.post(ip, data=data)
     except requests.ConnectionError as err:
         print("Server Error:\n" + str(err))
     # --------------------------------------------------
@@ -88,7 +98,14 @@ action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu er
 if action== 0:
     username = input("Gebe deinen Benuternamen an:\n")
     password = input("Passwort: ")
-    LOGIN_CREDENTIALS = (username, password)
+
+    salt =ip/salts/username
+    salt =json.loads(salt)
+
+    clum =salt["salt"]
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
+
+
 
 elif action== 1:
     LOGIN_CREDENTIALS= createUser()
@@ -120,7 +137,7 @@ while True:
         # user creates post by typing in the title and text of the post,
         # which are turned into a JSON String together with the User information and Likes
         case "p":
-            title= input("Titel: \n")
+            title = input("Titel: \n")
             text = input("Inhalt:\n")
             response = None
             data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))

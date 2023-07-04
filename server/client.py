@@ -1,12 +1,11 @@
 import jsonpickle
 import json
+import sys
 import requests
 import time
-import random as rn
 from post import ClientPost
 import hashlib
 import os
-from main import MyServer
 
 ip = "http://192.168.6.179:8080"
 
@@ -95,17 +94,40 @@ def createUser():
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user
 action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen: \n"))
-if action== 0:
+
+
+def login(counter):
     username = input("Gebe deinen Benuternamen an:\n")
     password = input("Passwort: ")
 
-    salt =ip/salts/username
+    # Request salt from Server to hash password for verification
+    salt =ip+"/salts/"+username
     salt =json.loads(salt)
 
     clum =salt["salt"]
     key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
+    hash =clum*key
+    js ={
+        "username": username,
+        "hash": hash
+    }
 
+    # check if the hash of the entered password fits the correct hash
+    # if so, then you can log in, else you have to reenter your username and password
+    correct =requests.post(ip, js)
+
+    if not correct:
+        if counter<=3:
+            login(counter+1)
+        # after three wrong tries the program stops
+        else:
+            sys.exit("Falscher Username oder Passwort.")
+
+# login with your username and password
+if action== 0:
+    counter =0
+    login(counter)
 
 elif action== 1:
     LOGIN_CREDENTIALS= createUser()
@@ -155,4 +177,5 @@ while True:
                 print(response.text)
             else:
                 print("ErrorStatusCode = ", response.status_code)
+
         # --------------------------------------------------

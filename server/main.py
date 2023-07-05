@@ -5,9 +5,6 @@ from mysql.connector import MySQLConnection
 import random as rn
 from post import Post
 
-hostName = "192.168.6.179"
-mysqlhostname = "192.168.6.179"
-serverPort = 8080
 
 
 def connect_to_db():

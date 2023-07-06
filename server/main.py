@@ -1,17 +1,23 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
+import sys
 import jsonpickle
-from mysql.connector import MySQLConnection
+import mariadb
 import random as rn
 from post import Post
 
+hostName = "192.168.3.232"
+mysqlhostname = "192.168.3.232"
+serverPort = 3306
 
 
-def connect_to_db():
-    conn = MySQLConnection(host="localhost", user="one", password="schillercoin", database="matesuperiority")
-    cursor = conn.cursor()
-
-    return cursor, conn
+db = mariadb.connect(
+    user="",
+    password="",
+    host="192.168.3.232",
+    port=3306,
+    database="octopost_production"
+)
+cursor = db.cursor()
 
 
 class MyServer(BaseHTTPRequestHandler):
@@ -21,8 +27,6 @@ class MyServer(BaseHTTPRequestHandler):
             params=int(params)
         else:
             params=1
-        print(params)
-        cursor, conn = connect_to_db()
         self.send_response(200)
         self.send_header("Content-type", "text/json")
         self.end_headers()
@@ -36,7 +40,6 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes(jsonpickle.encode(L), "utf-8"))
 
     def do_POST(self):
-        cursor, db = connect_to_db()
         content_length = int(self.headers["Content-Length"])  # <--- Gets the size of data
         post_data = self.rfile.read(content_length)
         client_post = jsonpickle.decode(post_data)

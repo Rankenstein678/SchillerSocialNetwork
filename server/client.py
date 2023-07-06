@@ -93,7 +93,7 @@ def createUser():
 
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user
-action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen: \n"))
+action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen: s\n"))
 
 
 def login(counter):

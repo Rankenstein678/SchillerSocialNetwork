@@ -1,34 +1,35 @@
 from fastapi import FastAPI
 
+import server.databank
 from models.LoginDataModel import LoginDataModel
 from models.SentPostModel import SentPostModel
-from server.databank import get_newest_posts
 
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/posts")
 def get_new_posts(amount: int | None = None):
     if amount is None:
         amount = 10
-    return get_newest_posts(amount)
+    return server.databank.get_newest_posts(amount)
 
 
 @app.get("/posts/{post_id}")
 def get_post_by_id(post_id: int):
-    return {"post_id": post_id}
+    return server.databank.get_post_by_id(post_id)
 
 
 @app.post("/posts")
-def make_post(post: SentPostModel):
-    return "not implemented"
+def make_post(post: SentPostModel, user_id: int):  # Todo: Implement login functionality
+    return server.databank.put_post(post, user_id)
 
 
 @app.patch("/posts/{post_id}")
-def like_post(post_id):
-    # TODO: PREVENT LIKING OF ONE POSTS
-    pass
+def like_post(post_id: int, user_id: int):  # Todo: Implement login functionality
+    return "NOT IMPLEMENTED"
 
+
+# TODO: Missing Databank structure needed
 
 @app.get("/salts/{username}")
 def get_salt(username: str):

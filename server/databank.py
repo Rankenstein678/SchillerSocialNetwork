@@ -41,5 +41,20 @@ def put_post(post: SentPostModel, user_id):
     cursor.close()
 
 
-def like_post(post_id: int, user_id: int):
-    pass
+def update_like_status(post_id: int, user_id: int):
+    cursor, connection = connect_to_db()
+    cursor.execute("SELECT * FROM liked_by WHERE postID = %s AND userID = %s",
+                   (post_id, user_id))
+    already_liked = cursor.fetchone()
+    if already_liked is None:
+        cursor.execute("INSERT INTO liked_by (postID, userID) VALUES (%s, %s)",
+                       (post_id, user_id))
+        cursor.execute("UPDATE posts SET likes = likes + 1 WHERE postID = %s",
+                       (post_id,))
+    else:
+        cursor.execute("DELETE FROM liked_by WHERE postID = %s AND userID = %s",
+                       (post_id, user_id))
+        cursor.execute("UPDATE posts SET likes = likes - 1 WHERE postID = %s",
+                       (post_id,))
+    connection.commit()
+    cursor.close()

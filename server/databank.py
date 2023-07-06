@@ -11,8 +11,8 @@ secrets = dotenv_values("secrets.env")
 # TODO:Secrets!!
 def connect_to_db():
     conn = mariadb.connect(host=SQL_SERVER_ADDRESS, user=secrets.get('SQL_USER'),
-                               password=secrets.get('SQL_PASSWORD'),
-                               database="octopost_production", port=3306)
+                           password=secrets.get('SQL_PASSWORD'),
+                           database="octopost_production", port=3306)
     cursor = conn.cursor()
 
     return cursor
@@ -28,9 +28,10 @@ def get_newest_posts(amount: int):
 
 def get_post_by_id(post_id: int):
     cursor = connect_to_db()
-    cursor.execute("SELECT * FROM posts p WHERE p.postID = %s", (post_id,))
+    cursor.execute("SELECT * FROM posts WHERE postID = %s", (post_id,))
     data = cursor.fetchall()
     cursor.close()
+    return data
 
 
 def put_post(post: SentPostModel):

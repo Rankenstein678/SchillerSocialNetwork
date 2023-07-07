@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class S2CPostModel(BaseModel):
-    creatorID: int
+    creatorEmail: str
     title: str
     content: str
     likes: int

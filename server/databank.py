@@ -33,27 +33,27 @@ def get_post_by_id(post_id: int):
     return data
 
 
-def put_post(post: C2SPostModel, user_id):
+def put_post(post: C2SPostModel, user_email:str):
     cursor, connection = connect_to_db()
-    cursor.execute("INSERT INTO posts (userID, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
-                   (user_id, post.title, post.content, 0, post.parent))
+    cursor.execute("INSERT INTO posts (userEmail, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
+                   (user_email, post.title, post.content, 0, post.parent))
     connection.commit()
     cursor.close()
 
 
-def update_like_status(post_id: int, user_id: int):
+def update_like_status(post_id: int, user_email: str):
     cursor, connection = connect_to_db()
-    cursor.execute("SELECT * FROM liked_by WHERE postID = %s AND userID = %s",
-                   (post_id, user_id))
+    cursor.execute("SELECT * FROM liked_by WHERE postID = %s AND userEmail = %s",
+                   (post_id, user_email))
     already_liked = cursor.fetchone()
     if already_liked is None:
-        cursor.execute("INSERT INTO liked_by (postID, userID) VALUES (%s, %s)",
-                       (post_id, user_id))
+        cursor.execute("INSERT INTO liked_by (postID, userEmail) VALUES (%s, %s)",
+                       (post_id, user_email))
         cursor.execute("UPDATE posts SET likes = likes + 1 WHERE postID = %s",
                        (post_id,))
     else:
-        cursor.execute("DELETE FROM liked_by WHERE postID = %s AND userID = %s",
-                       (post_id, user_id))
+        cursor.execute("DELETE FROM liked_by WHERE postID = %s AND userEmail = %s",
+                       (post_id, user_email))
         cursor.execute("UPDATE posts SET likes = likes - 1 WHERE postID = %s",
                        (post_id,))
     connection.commit()

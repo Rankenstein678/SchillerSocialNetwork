@@ -7,7 +7,7 @@ from models.C2SPostModel import C2SPostModel
 app = FastAPI(
     title="Octopost API",
     summary="API für das Octopost Social Network",
-    description= "Made by: Yannnick Bougaran und Phillip Zazzetta - Kontaktiere uns auf Teams!",
+    description="Made by: Yannnick Bougaran und Phillip Zazzetta - Kontaktiere uns auf Teams!",
     version="0.0.1",
 )
 
@@ -33,25 +33,25 @@ def get_post_by_id(post_id: int):
 
 
 @app.post("/posts")
-def make_post(post: C2SPostModel, user_id: int):  # Todo: Implement login functionality
+def make_post(post: C2SPostModel, user_email: str):  # Todo: Implement login functionality
     """Postet das C2SPostModel
 
         **- post:** C2SPostModel des zu postenden Inhalts. Parent ist optional
     """
-    return server.databank.put_post(post, user_id)
+    return server.databank.put_post(post, user_email)
 
 
 @app.patch("/posts/{post_id}")
-def update_like(post_id: int, user_id: int):  # Todo: Implement login functionality
+def update_like(post_id: int, user_email: str):  # Todo: Implement login functionality
     """Liked / Entliked den Post
 
         **- post_id:** ID des Posts
     """
-    return server.databank.update_like_status(post_id, user_id)
+    return server.databank.update_like_status(post_id, user_email)
 
 
-@app.get("/salts/{username}")
-def get_salt(username: str):
+@app.get("/salts/{user_email}")
+def get_salt(user_email: str):
     return {"salt": "PLACEHOLDER"}
 
 

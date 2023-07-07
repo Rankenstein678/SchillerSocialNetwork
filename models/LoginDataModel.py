@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class LoginDataModel(BaseModel):
-    username: str
+    userEmail: str
     hashed_pwd: str

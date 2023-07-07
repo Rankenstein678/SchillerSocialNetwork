@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import server.databank
 from models.LoginDataModel import LoginDataModel
 from models.C2SPostModel import C2SPostModel
+from models.S2CPostModel import S2CPostModel
 
 app = FastAPI(
     title="Octopost API",
@@ -13,7 +14,7 @@ app = FastAPI(
 
 
 @app.get("/posts")
-def get_new_posts(amount: int | None = None):
+def get_new_posts(amount: int | None = 10) -> list[S2CPostModel]:
     """Gibt die ausgewählte Anzahl der neusten Posts zurück.
 
         **- amount:** Anzahl der auszugebenen Posts, standardmäßig 10
@@ -24,12 +25,13 @@ def get_new_posts(amount: int | None = None):
 
 
 @app.get("/posts/{post_id}")
-def get_post_by_id(post_id: int):
+def get_post_by_id(post_id: int) -> S2CPostModel:
     """Gibt den ausgewählten Posts zurück.
 
         **- post_id:** ID des Posts
     """
-    return server.databank.get_post_by_id(post_id)
+    data = server.databank.get_post_by_id(post_id)
+    return data
 
 
 @app.post("/posts")

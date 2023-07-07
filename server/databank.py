@@ -2,6 +2,7 @@ import mariadb
 from dotenv import dotenv_values
 
 from models import C2SPostModel
+from models.S2CPostModel import S2CPostModel
 
 SQL_SERVER_ADDRESS = "192.168.3.232"
 
@@ -22,18 +23,21 @@ def get_newest_posts(amount: int):
     cursor.execute("SELECT * FROM posts ORDER BY postID DESC LIMIT %s", (amount,))
     data = cursor.fetchall()
     cursor.close()
-    return data
+    return list(map(lambda post:
+                    S2CPostModel(postID=post[0], creatorEmail=post[1], title=post[2], content=post[3], likes=post[4],
+                                 parent=post[5]), data))
 
 
 def get_post_by_id(post_id: int):
     cursor = connect_to_db()[0]
     cursor.execute("SELECT * FROM posts WHERE postID = %s", (post_id,))
-    data = cursor.fetchall()
+    data = cursor.fetchall()[0]
     cursor.close()
-    return data
+    return S2CPostModel(postID=data[0], creatorEmail=data[1], title=data[2], content=data[3], likes=data[4],
+                        parent=data[5])
 
 
-def put_post(post: C2SPostModel, user_email:str):
+def put_post(post: C2SPostModel, user_email: str):
     cursor, connection = connect_to_db()
     cursor.execute("INSERT INTO posts (userEmail, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
                    (user_email, post.title, post.content, 0, post.parent))

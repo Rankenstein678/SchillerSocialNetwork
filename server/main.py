@@ -34,9 +34,9 @@ def get_post_by_id(post_id: int):
 
 @app.post("/posts")
 def make_post(post: C2SPostModel, user_id: int):  # Todo: Implement login functionality
-    """Postet das SentPostModel
+    """Postet das C2SPostModel
 
-        **- post:** SentPostModel des zu postenden Inhalts. Parent ist optional
+        **- post:** C2SPostModel des zu postenden Inhalts. Parent ist optional
     """
     return server.databank.put_post(post, user_id)
 

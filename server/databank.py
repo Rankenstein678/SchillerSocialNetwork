@@ -1,7 +1,7 @@
 import mariadb
 from dotenv import dotenv_values
 
-from models.SentPostModel import SentPostModel
+from models import C2SPostModel
 
 SQL_SERVER_ADDRESS = "192.168.3.232"
 
@@ -33,7 +33,7 @@ def get_post_by_id(post_id: int):
     return data
 
 
-def put_post(post: SentPostModel, user_id):
+def put_post(post: C2SPostModel, user_id):
     cursor, connection = connect_to_db()
     cursor.execute("INSERT INTO posts (userID, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
                    (user_id, post.title, post.content, 0, post.parent))

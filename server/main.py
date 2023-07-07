@@ -19,8 +19,6 @@ def get_new_posts(amount: int | None = 10) -> list[S2CPostModel]:
 
         **- amount:** Anzahl der auszugebenen Posts, standardmäßig 10
     """
-    if amount is None:
-        amount = 10
     return server.databank.get_newest_posts(amount)
 
 

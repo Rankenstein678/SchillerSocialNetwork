@@ -39,6 +39,9 @@ def get_post_by_id(post_id: int):
 
 def put_post(post: C2SPostModel, user_email: str):
     cursor, connection = connect_to_db()
+    # Don't allow titles on comments
+    if post.parent is not None:
+        post.title = None
     cursor.execute("INSERT INTO posts (userEmail, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
                    (user_email, post.title, post.content, 0, post.parent))
     connection.commit()

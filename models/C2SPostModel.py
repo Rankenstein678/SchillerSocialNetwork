@@ -2,6 +2,6 @@ from pydantic import BaseModel
 
 
 class C2SPostModel(BaseModel):
-    title: str
+    title: str | None = None
     content: str
     parent: int | None = None

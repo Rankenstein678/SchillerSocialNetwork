@@ -34,25 +34,25 @@ def get_post_by_id(post_id: int) -> S2CPostModel:
 
 
 @app.post("/posts")
-def make_post(post: C2SPostModel, user_email: str):  # Todo: Implement login functionality
+def make_post(post: C2SPostModel, username: str):  # Todo: Implement login functionality
     """Postet das C2SPostModel
 
         **- post:** C2SPostModel des zu postenden Inhalts. Parent ist optional
     """
-    return server.databank.put_post(post, user_email)
+    return server.databank.put_post(post, username)
 
 
 @app.patch("/posts/{post_id}")
-def update_like(post_id: int, user_email: str):  # Todo: Implement login functionality
+def update_like(post_id: int, username: str):  # Todo: Implement login functionality
     """Liked / Entliked den Post
 
         **- post_id:** ID des Posts
     """
-    return server.databank.update_like_status(post_id, user_email)
+    return server.databank.update_like_status(post_id, username)
 
 
-@app.get("/salts/{user_email}")
-def get_salt(user_email: str):
+@app.get("/salts/{username}")
+def get_salt(username: str):
     return {"salt": "PLACEHOLDER"}
 
 

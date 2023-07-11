@@ -1,13 +1,11 @@
-import jsonpickle
 import json
 import sys
 import requests
 import time
-from post import ClientPost
 import hashlib
 import os
 
-ip = "http://192.168.6.179:8080"
+ip = "localhost"
 
 
 print("""
@@ -72,8 +70,8 @@ def createUser():
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
     # combine salt and key and use them as login credentials together with username
-    LOGIN_CREDENTIALS =(username, clum+key)
-    data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
+    LOGIN_CREDENTIALS =json.loads({"username":username, "hash":clum+key})
+
     # --------------------------------------------------
     # try to make post request to web page using previously made JSON String data with @requests
     try:
@@ -84,10 +82,6 @@ def createUser():
     # create user if everything is allright or restart function if userName already exists
     if response.status_code == 200:
         print(response.text)
-        return(LOGIN_CREDENTIALS)
-    elif response.status_code == 500:
-        print(response.text)
-        LOGIN_CREDENTIALS= createUser()
         return(LOGIN_CREDENTIALS)
     # --------------------------------------------------
 
@@ -149,8 +143,7 @@ while True:
             # if connection is working the last post in the sql database from table "posts" is printed
             # calling own class from "post.py" and reading out one constructors information
             if response.status_code == 200:
-                post = jsonpickle.decode(response.text)[0]
-                print(f"User: {post.userID}\nTitle: {post.title}\nText: {post.text}\nLikes: {post.likes}")
+                pass
             else:
                 print("ErrorStatusCode = ", response.status_code)
             # --------------------------------------------------

@@ -5,7 +5,7 @@ import time
 import hashlib
 import os
 
-ip = "localhost"
+ip = "http://127.0.0.1:8000"
 
 
 print("""
@@ -144,7 +144,7 @@ while True:
             # if connection is working the last post in the sql database from table "posts" is printed
             # calling own class from "post.py" and reading out one constructor's information
             if response.status_code == 200:
-                requests.get(ip+'/posts'+'?amount='+amount)
+                print(requests.get(ip+'/posts'+'?amount='+amount))
             else:
                 print("ErrorStatusCode = ", response.status_code)
             # --------------------------------------------------
@@ -152,11 +152,12 @@ while True:
         # --------------------------------------------------
         # user creates post by typing in the title and text of the post,
         # which are turned into a JSON String together with the User information and Likes
+        # TODO: add post requests and comments
         case "p":
             title = input("Titel: \n")
-            text = input("Inhalt:\n")
-            response = None
-            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))
+            content = input("Inhalt:\n")
+            model = json.loads({"title":title, "content":content, "parent":None})
+            data = requests.post(ip+"/posts"+"?C2SPostModel"+)
         # --------------------------------------------------
             # try to connect with web page as before with the same results for different response codes
             try:

@@ -128,9 +128,10 @@ elif action== 1:
 # --------------------------------------------------
 # staying in loop for user to interact with posts by reading or creating them
 while True:
-    user_in = input("r - Gibt neuesten Post aus; p - sendet einen Post\n")
+    user_in = input("r - Gibt neueste Posts aus; p - sendet einen Post\n")
     match user_in:
         case "r":
+            amount = input("Wie viele Posts sollen angezeigt werden? (Max 20):")
             response = None
             # --------------------------------------------------
             # request connection to the web page (200 == positive response) using @requests
@@ -141,9 +142,9 @@ while True:
                 continue
             # --------------------------------------------------
             # if connection is working the last post in the sql database from table "posts" is printed
-            # calling own class from "post.py" and reading out one constructors information
+            # calling own class from "post.py" and reading out one constructor's information
             if response.status_code == 200:
-                pass
+                requests.get(ip+'/posts'+'?amount='+amount)
             else:
                 print("ErrorStatusCode = ", response.status_code)
             # --------------------------------------------------

@@ -41,7 +41,7 @@ def put_post(post: C2SPostModel, username: str):
     # Don't allow titles on comments
     if post.parent is not None:
         post.title = None
-    cursor.execute("INSERT INTO posts (userEmail, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
+    cursor.execute("INSERT INTO posts (username, title, content, likes, parentPost) VALUES (%s, %s, %s, %s, %s)",
                    (username, post.title, post.content, 0, post.parent))
     connection.commit()
     cursor.close()
@@ -49,16 +49,16 @@ def put_post(post: C2SPostModel, username: str):
 
 def update_like_status(post_id: int, username: str):
     cursor, connection = connect_to_db()
-    cursor.execute("SELECT * FROM liked_by WHERE postID = %s AND userEmail = %s",
+    cursor.execute("SELECT * FROM liked_by WHERE postID = %s AND username = %s",
                    (post_id, username))
     already_liked = cursor.fetchone()
     if already_liked is None:
-        cursor.execute("INSERT INTO liked_by (postID, userEmail) VALUES (%s, %s)",
+        cursor.execute("INSERT INTO liked_by (postID, username) VALUES (%s, %s)",
                        (post_id, username))
         cursor.execute("UPDATE posts SET likes = likes + 1 WHERE postID = %s",
                        (post_id,))
     else:
-        cursor.execute("DELETE FROM liked_by WHERE postID = %s AND userEmail = %s",
+        cursor.execute("DELETE FROM liked_by WHERE postID = %s AND username = %s",
                        (post_id, username))
         cursor.execute("UPDATE posts SET likes = likes - 1 WHERE postID = %s",
                        (post_id,))

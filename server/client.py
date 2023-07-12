@@ -5,7 +5,7 @@ import time
 import hashlib
 import os
 
-ip = "localhost"
+ip = "http://127.0.0.1:8000"
 
 
 print("""
@@ -90,7 +90,7 @@ def createUser():
 action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen: s\n"))
 
 
-def login(counter):
+for counter in range(0, 2):
     username = input("Gebe deinen Benuternamen an:\n")
     password = input("Passwort: ")
 
@@ -111,17 +111,14 @@ def login(counter):
     # if so, then you can log in, else you have to reenter your username and password
     correct =requests.post(ip, js)
 
-    if not correct:
-        if counter<=3:
-            login(counter+1)
-        # after three wrong tries the program stops
-        else:
-            sys.exit("Falscher Username oder Passwort.")
+    if correct:
+        break
+    else:
+        print("Falscher Username oder Passwort.")
 
-# login with your username and password
-if action== 0:
-    counter =0
-    login(counter)
+if not correct:
+    sys.exit("Zu oft falsch eingegeben. Tschüss :)")
+
 
 elif action== 1:
     LOGIN_CREDENTIALS= createUser()
@@ -144,7 +141,7 @@ while True:
             # if connection is working the last post in the sql database from table "posts" is printed
             # calling own class from "post.py" and reading out one constructor's information
             if response.status_code == 200:
-                requests.get(ip+'/posts'+'?amount='+amount)
+                print(requests.get(ip+'/posts'+'?amount='+amount))
             else:
                 print("ErrorStatusCode = ", response.status_code)
             # --------------------------------------------------
@@ -152,11 +149,11 @@ while True:
         # --------------------------------------------------
         # user creates post by typing in the title and text of the post,
         # which are turned into a JSON String together with the User information and Likes
+        # TODO: add post requests and comments
         case "p":
             title = input("Titel: \n")
-            text = input("Inhalt:\n")
-            response = None
-            data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], title, text, 0))
+            content = input("Inhalt:\n")
+            data = requests.post(ip+"/posts"+"?username="+username, json={"title":title, "content":content})
         # --------------------------------------------------
             # try to connect with web page as before with the same results for different response codes
             try:

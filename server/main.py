@@ -15,12 +15,12 @@ app = FastAPI(
 
 
 @app.get("/posts")
-def get_new_posts(amount: int | None = 10) -> list[S2CPostModel]:
+def get_new_posts(amount: int | None = 10, after: int | None = None) -> list[S2CPostModel]:
     """Gibt die ausgewählte Anzahl der neusten Posts zurück.
 
         **- amount:** Anzahl der auszugebenen Posts, standardmäßig 10
     """
-    return server.databank.get_newest_posts(amount)
+    return server.databank.get_newest_posts(amount, after)
 
 
 @app.get("/posts/{post_id}")

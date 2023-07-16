@@ -17,9 +17,12 @@ def connect_to_db():
     return cursor, conn
 
 
-def get_newest_posts(amount: int):
+def get_newest_posts(amount: int, after: int | None):
     cursor = connect_to_db()[0]
-    cursor.execute("SELECT * FROM posts ORDER BY postID DESC LIMIT %s", (amount,))
+    if after is None:
+        cursor.execute("SELECT * FROM posts ORDER BY postID DESC LIMIT %s", (amount,))
+    else:
+        cursor.execute("SELECT * FROM posts WHERE postID < %s ORDER BY postID DESC LIMIT %s", (after, amount,))
     data = cursor.fetchall()
     cursor.close()
     return list(map(lambda post:

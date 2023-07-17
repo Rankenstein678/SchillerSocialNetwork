@@ -3,6 +3,7 @@ import requests
 import time
 import hashlib
 import os
+import json
 
 ip = "http://192.168.6.179:8080"
 
@@ -57,9 +58,11 @@ for i in s:
 print("\n")
 
 
+username = ''
 # function to create users with unique usernames and a password
 def createUser():
     # --------------------------------------------------
+    global username
     # take user input for verification and turn it into a JSON String with @jsonpickle
     username =input("Gebe einen Benuternamen an:\n")
     password =input("Passwort: ")
@@ -69,58 +72,39 @@ def createUser():
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
     # combine salt and key and use them as login credentials together with username
-    LOGIN_CREDENTIALS =(username, clum+key)
-    data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
-    # --------------------------------------------------
-    # try to make post request to web page using previously made JSON String data with @requests
-    try:
-        response =requests.post(ip, data=data)
-    except requests.ConnectionError as err:
-        print("Server Error:\n" + str(err))
-    # --------------------------------------------------
-    # create user if everything is allright or restart function if userName already exists
-    if response.status_code == 200:
-        print(response.text)
-        return(LOGIN_CREDENTIALS)
-    elif response.status_code == 500:
-        print(response.text)
-        LOGIN_CREDENTIALS= createUser()
-        return(LOGIN_CREDENTIALS)
-    # --------------------------------------------------
+    print(requests.post(ip +"/createu/"+username+"/"+clum+key))
 
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user
 action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen:\n"))
 
+if action==0: createUser()
+def login():
+    for counter in range(0, 2):
+        username = input("Gebe deinen Benuternamen an:\n")
+        password = input("Passwort: ")
 
-# for counter in range(0, 2):
-username = input("Gebe deinen Benuternamen an:\n")
-#     password = input("Passwort: ")
-#
-#     # Request salt from Server to hash password for verification
-#     salt =ip+"/salts/"+username
-#     salt =json.loads(salt)
-#
-#     clum =salt["salt"]
-#     key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
-#
-#     hash =clum*key
-#     js ={
-#         "username": username,
-#         "hash": hash
-#     }
-#
-#     # check if the hash of the entered password fits the correct hash
-#     # if so, then you can log in, else you have to reenter your username and password
-#     correct =requests.post(ip, js)
-#
-#     if correct:
-#         break
-#     else:
-#         print("Falscher Username oder Passwort.")
-#
-# if not correct:
-#     sys.exit("Zu oft falsch eingegeben. Tschüss :)")
+        # Request salt from Server to hash password for verification
+        salt =ip+"/salts/"+username
+        salt =json.loads(salt)
+
+        clum =salt["salt"]
+        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
+
+        hash =clum*key
+        js ={
+            "username": username,
+            "hash": hash
+        }
+
+        # check if the hash of the entered password fits the correct hash
+        # if so, then you can log in, else you have to reenter your username and password
+        correct =requests.post(ip, js)
+        if correct: continue
+        else: print("Nochmal versuchen.")
+    return correct
+if not login():
+    sys.exit("Falscher Username oder Passwort.")
 
 
 if action== 1:
@@ -135,3 +119,8 @@ while True:
             response = None
             # --------------------------------------------------
             print(requests.get(ip+'/posts'+'?amount='+amount))
+        case "p":
+            title = input("Titel: \n")
+            content = input("Inhalt:\n")
+            data = requests.post(ip + "/posts" + "?username=" + username, json={"title": title, "content": content})
+        # --------------------------------------------------

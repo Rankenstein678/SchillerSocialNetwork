@@ -1,11 +1,10 @@
-import json
 import sys
 import requests
 import time
 import hashlib
 import os
 
-ip = "http://127.0.0.1:8000"
+ip = "http://192.168.6.179:8080"
 
 
 print("""
@@ -70,8 +69,8 @@ def createUser():
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
     # combine salt and key and use them as login credentials together with username
-    LOGIN_CREDENTIALS =json.loads({"username":username, "hash":clum+key})
-
+    LOGIN_CREDENTIALS =(username, clum+key)
+    data = jsonpickle.encode(ClientPost(LOGIN_CREDENTIALS[0], LOGIN_CREDENTIALS[1], "", 1))
     # --------------------------------------------------
     # try to make post request to web page using previously made JSON String data with @requests
     try:
@@ -82,6 +81,10 @@ def createUser():
     # create user if everything is allright or restart function if userName already exists
     if response.status_code == 200:
         print(response.text)
+        return(LOGIN_CREDENTIALS)
+    elif response.status_code == 500:
+        print(response.text)
+        LOGIN_CREDENTIALS= createUser()
         return(LOGIN_CREDENTIALS)
     # --------------------------------------------------
 
@@ -132,11 +135,3 @@ while True:
             response = None
             # --------------------------------------------------
             print(requests.get(ip+'/posts'+'?amount='+amount))
-            # --------------------------------------------------
-
-        # --------------------------------------------------
-        case "p":
-            title = input("Titel: \n")
-            content = input("Inhalt:\n")
-            data = requests.post(ip+"/posts"+"?username="+username, json={"title":title, "content":content})
-        # --------------------------------------------------

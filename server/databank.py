@@ -16,7 +16,6 @@ def connect_to_db():
 
     return cursor, conn
 
-
 def get_newest_posts(amount: int, after: int | None):
     cursor = connect_to_db()[0]
     if after is None:
@@ -67,3 +66,10 @@ def update_like_status(post_id: int, username: str):
                        (post_id,))
     connection.commit()
     cursor.close()
+
+def create_user(username: str, hash: int):
+    cursor, connection = connect_to_db()
+    cursor.execute("INSERT INTO users(username, password) VALUES {%s, %s}", (username, hash))
+    connection.commit()
+    cursor.close()
+    return(f'Der User {username} wurde erfolgreich erstellt.')

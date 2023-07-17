@@ -59,3 +59,7 @@ def get_salt(username: str):
 @app.post("/login")
 def login_user(login_data: LoginDataModel):
     return login_data
+
+@app.post("/create/{username}/{hash}")
+def create_user(username: str, hash: int):
+    return server.databank.create_user(username, hash)

@@ -72,17 +72,17 @@ def createUser():
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
     # combine salt and key and use them as login credentials together with username
-    print(requests.post(ip +"/createu/"+username+"/"+clum+key))
+    print(requests.post(ip +"/createu/"+username+"/"+ clum+key))
 
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user
-action = int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen:\n"))
+action =int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen:\n"))
 
-if action==0: createUser()
+if action == 0: createUser()
 def login():
     for counter in range(0, 2):
-        username = input("Gebe deinen Benuternamen an:\n")
-        password = input("Passwort: ")
+        username =input("Gebe deinen Benuternamen an:\n")
+        password =input("Passwort: ")
 
         # Request salt from Server to hash password for verification
         salt =ip+"/salts/"+username
@@ -107,8 +107,8 @@ if not login():
     sys.exit("Falscher Username oder Passwort.")
 
 
-if action== 1:
-    LOGIN_CREDENTIALS= createUser()
+if action == 1:
+    LOGIN_CREDENTIALS = createUser()
 # --------------------------------------------------
 while True:
     user_in = input("r - Gibt neueste Posts aus; p - sendet einen Post\n")

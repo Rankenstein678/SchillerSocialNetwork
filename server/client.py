@@ -5,7 +5,7 @@ import hashlib
 import os
 import json
 
-ip = "http://192.168.6.179:8080"
+ip = "http://127.0.0.1:8000"
 
 
 print("""
@@ -71,40 +71,42 @@ def createUser():
     clum =os.urandom(32)
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
+    hash = str(clum+key)[1::]
     # combine salt and key and use them as login credentials together with username
-    print(requests.post(ip +"/createu" + "?username=" + username + "?hash=" + clum+key))
+    print(requests.post(ip +"/createu" + "?username=" + username + "&hash=" + hash))
 
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user
 action =int(input("Gebe Aktion ein     \"0\" für Posts     \"1\" um User zu erstellen:\n"))
 
-if action == 0: createUser()
-def login():
-    for counter in range(0, 2):
-        username =input("Gebe deinen Benuternamen an:\n")
-        password =input("Passwort: ")
-
-        # Request salt from Server to hash password for verification
-        salt =ip+"/salts/"+username
-        salt =json.loads(salt)
-
-        clum =salt["salt"]
-        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
-
-        hash =clum*key
-        js ={
-            "username": username,
-            "hash": hash
-        }
-
-        # check if the hash of the entered password fits the correct hash
-        # if so, then you can log in, else you have to reenter your username and password
-        correct =requests.post(ip, js)
-        if correct: continue
-        else: print("Nochmal versuchen.")
-    return correct
-if not login():
-    sys.exit("Falscher Username oder Passwort.")
+if action == 1: createUser()
+#def login():
+#    for counter in range(0, 2):
+username =input("Gebe deinen Benuternamen an:\n")
+#        password =input("Passwort: ")
+#
+#        # Request salt from Server to hash password for verification
+#        salt =ip+"/salts/"+username
+#        salt =json.loads(salt)
+#
+#        clum =salt["salt"]
+#        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
+#
+#        hash =clum*key
+#        js ={
+#            "username": username,
+#            "hash": hash
+#        }
+#
+#        # check if the hash of the entered password fits the correct hash
+#        # if so, then you can log in, else you have to reenter your username and password
+#        correct =requests.post(ip, js)
+#        if correct: continue
+#        else: print("Nochmal versuchen.")
+#    return correct
+#correct = login()
+#if not correct:
+#    sys.exit("Falscher Username oder Passwort.")
 
 
 if action == 1:

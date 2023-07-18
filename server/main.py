@@ -61,5 +61,5 @@ def login_user(login_data: LoginDataModel):
     return login_data
 
 @app.post("/createu")
-def create_user(username: str, hash: int):
-    return server.databank.create_user(username, hash)
+def create_user(username: str, hash: str):
+    print(server.databank.create_user(username, hash))

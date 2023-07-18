@@ -67,9 +67,10 @@ def update_like_status(post_id: int, username: str):
     connection.commit()
     cursor.close()
 
-def create_user(username: str, hash: int):
+def create_user(username: str, hash: str):
     cursor, connection = connect_to_db()
-    cursor.execute("INSERT INTO users(username, password) VALUES {%s, %s}", (username, hash))
+    cursor.execute("INSERT INTO users(username, pwd) VALUES (%s, %s)",
+                   (username, hash))
     connection.commit()
     cursor.close()
     return(f'Der User {username} wurde erfolgreich erstellt.')

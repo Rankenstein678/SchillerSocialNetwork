@@ -60,6 +60,6 @@ def get_salt(username: str):
 def login_user(login_data: LoginDataModel):
     return login_data
 
-@app.post("/createu/{username}/{hash}")
+@app.post("/createu")
 def create_user(username: str, hash: int):
     return server.databank.create_user(username, hash)

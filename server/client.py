@@ -72,7 +72,7 @@ def createUser():
     key =hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), clum, 200000)
 
     # combine salt and key and use them as login credentials together with username
-    print(requests.post(ip +"/createu/"+username+"/"+ clum+key))
+    print(requests.post(ip +"/createu" + "?username=" + username + "?hash=" + clum+key))
 
 # --------------------------------------------------
 # choose between creating user or interacting with the program as a user

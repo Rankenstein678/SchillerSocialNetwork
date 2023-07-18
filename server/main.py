@@ -8,7 +8,7 @@ from models.S2CPostModel import S2CPostModel
 app = FastAPI(
     title="Octopost API",
     summary="API für das Octopost Social Network",
-    description="Made by: Yannnick Bougaran und Phillip Zazzetta - Kontaktiere uns auf Teams!",
+    description="Made by: Yannick Bougaran und Phillip Zazzetta - Kontaktiere uns auf Teams!",
     version="0.1.0",
     docs_url="/",
 )
